@@ -1,0 +1,26 @@
+h1 {
+	color:white;
+	background-color:blue;
+}
+
+#footer {
+width: 680px;
+background-color: #000;
+color: #DDD;
+text-align: center;
+height: 20px;
+margin-top: 130%;
+}
+
+#container {
+min-height: 70%;
+background-color: #DDD;
+border-left: 2px solid #666;
+border-right: 2px solid #666;
+width: 676px;
+margin: 0 auto;
+}
+
+html, body {
+height: 95%;
+}
