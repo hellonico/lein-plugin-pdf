@@ -26,4 +26,5 @@
   :source-path "src/clj"
   :dev-dependencies [
                      ;[lein-doc-pdf "1.0.0"]
+					 [lein-clojars/lein-clojars "0.6.0"]
                      [lein-eclipse "1.0.0"]] ) 
