@@ -3,3 +3,4 @@
 * support to transform output from marginalia
 * Nice output for each templating system
 * somehow jfreechart charting for free
+* support for json properties along yaml and java properties
