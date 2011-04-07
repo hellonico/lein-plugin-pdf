@@ -24,7 +24,8 @@
                     :exclusions [bctsp/bcmail-jdk14 org.apache.ant/ant org.apache.ant/ant-launcher]]]
   :repositories  {"stuartsierra" "http://stuartsierra.com/maven2" "conjars" "http://conjars.org/repo/"}
   :source-path "src/clj"
+  :doc-pdf {:output-file "doc.pdf"}
   :dev-dependencies [
-                     ;[lein-doc-pdf "1.0.0"]
+                     [lein-doc-pdf "1.0.0"]
 					 [lein-clojars/lein-clojars "0.6.0"]
                      [lein-eclipse "1.0.0"]] ) 
