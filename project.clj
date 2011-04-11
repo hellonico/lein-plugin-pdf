@@ -28,8 +28,9 @@
 	:input-files "src/samples/remote"
 	:output-file "seed.pdf"
 	:fonts-folder "src/fonts"
+	:encryption {:userpassword "user" :ownerpassword "owner" :strength true :permissions 0}
   }
   :dev-dependencies [
-                     ;[lein-doc-pdf "1.0.2"]
+                     [lein-doc-pdf "1.0.3"]
 					 [lein-clojars/lein-clojars "0.6.0"]
                      [lein-eclipse "1.0.0"]] ) 

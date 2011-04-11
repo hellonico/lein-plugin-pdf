@@ -1,10 +1,7 @@
-x remove processed files after the run, not on shutdown, so we can use interactive mode
-x one file on the command line
-x support for external URL
-
+* password encryption
+* support trigger on file save in the target folder
 
 * pluggable format support
-* support trigger on file save in the target folder
 * support for GSP
 * support for proxy in remote files
 

@@ -3,6 +3,7 @@
   (:use clojure.contrib.java-utils)
   (:require [clojure.contrib.logging :as log])
   ; below are java libraries only
+  (:import [com.lowagie.text.pdf PdfReader PdfEncryptor])
   (:import [org.ho.yaml Yaml])
   (:import [org.eclipse.mylyn.wikitext.core.parser MarkupParser])
   (:import [org.eclipse.mylyn.wikitext.textile.core TextileLanguage])
@@ -50,7 +51,11 @@
 
 (defn get-sibling
   [document ext] 
-    (File. (str (.getParent document) "/" (first (get-prefix-suffix document)) "." ext)))
+	(let [
+		; not sure. get around some weird pattern when the parent was empty 
+		; with a File created from a relative path
+		parent (.getParent (File. (.getAbsolutePath document)))]
+    (File. (str parent "/" (first (get-prefix-suffix document)) "." ext))))
 
 (defn get-file-content
   [document]
@@ -207,6 +212,24 @@
 			""
 		)))
 
+(defn encrypt
+	[document project] 
+	(let
+		[
+		encryption (get (get project :doc-pdf) :encryption)
+		encrypt? (not (nil? encryption))
+		]
+		(if encrypt?
+		(doall
+			(PdfEncryptor/encrypt 
+				(PdfReader. (.getAbsolutePath document)) 
+				(FileOutputStream. (get-sibling document "encrypted.pdf")) 
+				(get encryption :strength false) 
+				(get encryption :userpassword "")
+				(get encryption :ownerpassword "")  
+				(get encryption :permissions ""))
+		))))
+
 (defn add-fonts
 	[project renderer]
 	(let
@@ -231,8 +254,8 @@
      
      input-files (get-parameter :input-files project first-arg)
      outputfile  (get-parameter :output-file project second-arg)
-
-     os (FileOutputStream. (File. outputfile))    
+	 output-file (File. outputfile)
+     os (FileOutputStream. output-file)    
      renderer (ITextRenderer.)   
   
      ; the first file is handled slightly differently by flying saucer
@@ -269,4 +292,6 @@
 
   ; clean up intermediate files
   (clean)
+  ; encrypt if needed
+  (encrypt output-file project)
 ))
