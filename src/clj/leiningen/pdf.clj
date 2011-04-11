@@ -4,7 +4,13 @@
   (:import [org.ho.yaml Yaml])
   (:import [org.eclipse.mylyn.wikitext.core.parser MarkupParser])
   (:import [org.eclipse.mylyn.wikitext.textile.core TextileLanguage])
-  (:import [java.io FileReader FileInputStream FileOutputStream File FileWriter])
+  (:import [java.io 
+            InputStreamReader 
+            FileReader
+            FileInputStream
+            FileOutputStream
+            File
+            FileWriter])
   (:import [org.eclipse.mylyn.wikitext.core.parser.builder HtmlDocumentBuilder])
   (:import [com.petebevin.markdown MarkdownProcessor])
   (:import [org.antlr.stringtemplate StringTemplate])
@@ -35,6 +41,10 @@
 (defn get-sibling
   [document ext] 
     (File. (str (.getParent document) "/" (first (get-prefix-suffix document)) "." ext)))
+
+(defn get-file-content
+  [document]
+    (slurp (InputStreamReader. (FileInputStream. document) "utf-8")))
 
 ; add the document to the renderer if the document 
 ; exists
@@ -67,7 +77,7 @@
 (defn handle-markdown [document]
   (let[file (get-sibling document "html")
        markdown (com.petebevin.markdown.MarkdownProcessor.)]
-    (spit file (.markdown markdown (slurp document)))
+    (spit file (.markdown markdown (get-file-content document)))
     ;(.deleteOnExit file) 
     file))
 
@@ -106,10 +116,11 @@
        ]
   ; add external CSS to file
   (if (.exists css) (.addCssStylesheet builder css))
+  (.setEncoding builder "UTF-8") 
   ; make sure we do not leave intermediate files
   (.deleteOnExit file)  
   ; convert the textile content 
-  (.parse marker (slurp document))
+  (.parse marker (get-file-content document))
   ; finish writer the html file
   (.close writer)
   file))
@@ -145,18 +156,53 @@
         java-file)
       (recur (rest files))))))
 
+(defn get-parameter
+	[key project & args]
+	(let
+		[
+		project-settings (get project :doc-pdf {})
+		project-value (project-settings key)
+		]
+		(condp = key
+			:output-file 
+			 	(if (nil? project-value) "classes/doc.pdf" project-value)
+			:fonts-folder 
+				(File. (if (nil? project-value) "src/fonts"  project-value))
+			:input-files
+				(let[
+					command-line-file (first args)
+					input-file 
+				(File. (if (not (nil? command-line-file)) command-line-file (if (nil? project-value) "src/doc" project-value)))
+				]
+ 			(if (.isFile input-file) input-file (seq (.listFiles input-file))))
+			""
+		)))
+
+(defn add-fonts
+	[project renderer]
+	(let
+		[resolver (.getFontResolver renderer)
+		font-folder (get-parameter :fonts-folder project)
+		font-files (.listFiles font-folder)]
+		(println (str "[\tLoading Font:\t " (count font-files)))
+		(loop [fonts font-files]
+			(let[ current-font (first fonts)]
+				(if (not (nil? current-font))
+					(do
+						(println (str "[\tAdding: " current-font))
+						(.addFont resolver (.getAbsolutePath current-font) com.lowagie.text.pdf.BaseFont/IDENTITY_H true)
+					(recur (rest fonts))))))))
+
 ; main method for plugin
 (defn pdf [project & args]
   (let
     [
-     first-arg (first args)
-     second-arg (second args)
+     ;first-arg (first args) ; input file
+     ;second-arg (second args) ; output file
      
-     inputfile (if (nil? first-arg)  "src/doc" first-arg)
-     input-file (File. inputfile)
-     input-files (if (.isFile input-file) input-file (seq (.listFiles input-file))) 
-     ofilename (str "classes/" (first (get-prefix-suffix input-file)) ".pdf")
-     outputfile  (if (nil? second-arg) ofilename second-arg)
+     input-files (get-parameter :input-files project)
+     outputfile  (get-parameter :output-file project)
+
      os (FileOutputStream. (File. outputfile))    
      renderer (ITextRenderer.)   
   
@@ -165,11 +211,18 @@
      input-files (remove #{first-doc}  input-files )
      h-first-doc (handle-doc first-doc)
     ]
+
+	(println (str "[\tProject settings:\n\t" (project :doc-pdf)))	
+	
+    (println (str "[\tUsing encoding\t: " (System/getProperty "file.encoding")))
     (println (str "[\tFirst File\t: " first-doc))
     (println (str "[\tRemaing Files\t: " (count input-files)))
-    (println (str "[\tGenerating\t: " ofilename))
+    (println (str "[\tGenerating\t: " outputfile))
     (println (str "[\t----------\t "))
-    
+
+    (add-fonts project renderer)
+    (println (str "[\t----------\t "))    
+
   ; first file and pdf creation
   (println (str "[\tAdding\t: " h-first-doc))
   (doto renderer 

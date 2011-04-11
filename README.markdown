@@ -52,6 +52,7 @@ To add this plugin to your lein-based clojure project, here is what to put in th
 Then running 
 
 ``lein deps``
+
 ``lein help`` 
 
 will display the new task:
@@ -59,6 +60,8 @@ will display the new task:
 ``pdf         Convert text document under different markup languages to PDF``
 
 ## Run it
+
+### Basic
 To run the task, just type
 
 ``lein pdf``
@@ -70,3 +73,10 @@ You can also specify a different folder, for example:
 ``lein pdf src/my-templates``
 
 The name of the resulting pdf file will be based on the name of the folder.
+
+### Support for utf-8
+
+You need to force the JVM to use the file encoding to handle encoding characters along those line:
+``export JAVA_OPTS="-Dfile.encoding=utf-8" ; lein pdf``
+
+Then the JVM will pick up the proper encoding to handle files and will display the fonts in the resulting document. 

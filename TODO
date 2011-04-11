@@ -1,3 +1,4 @@
+* metadata: output filename, pages, folder, font folder
 * support for external URL
 * pluggable format support
 

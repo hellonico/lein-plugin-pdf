@@ -8,6 +8,12 @@
 This is the date: ${date}
 This is an image <img src="sunshine-for-a-m.jpg"/>
 </div>
+<div class="font1">
+あろー
+</div>
+<div class="font2">
+あろー
+</div>
 <#include "ftl/footer.ftl">
 </body>
 </html>

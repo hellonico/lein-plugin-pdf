@@ -1,3 +1,16 @@
+*{ 
+	font-size: 9px;
+	/*font-family:"Verdana";*/
+	font-family:"YOzFontK";
+}
+.font1 {
+	font-family:"YOzFontK";
+	writing-mode: tb-rl;
+}
+.font2 {
+    font-family:"IPAexGothic";
+}
+
 h1 {
 	color:white;
 	background-color:blue;
