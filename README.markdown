@@ -74,6 +74,12 @@ You can also specify a different folder, for example:
 
 The name of the resulting pdf file will be based on the name of the folder.
 
+### Support for project metadata
+You can add the following parameters in your ``project.clj`` file:
+* output-file: the name of the file to output 
+* fonts-folder: the place to load font for the resulting PDF. Those fonts will be included in the resulting file
+* input-files: the source folder, or file to load templates from. If this points to a folder, this will include all the files in that folder.
+
 ### Support for utf-8
 
 You need to force the JVM to use the file encoding to handle encoding characters along those line:
