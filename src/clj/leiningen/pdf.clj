@@ -3,7 +3,8 @@
   (:use clojure.contrib.java-utils)
   (:require [clojure.contrib.logging :as log])
   ; below are java libraries only
-  (:import [com.lowagie.text.pdf PdfReader PdfEncryptor])
+  (:import [com.lowagie.text.pdf PdfReader PdfEncryptor PdfStamper PdfSignatureAppearance])
+  (:import [java.security PrivateKey KeyStore])
   (:import [org.ho.yaml Yaml])
   (:import [org.eclipse.mylyn.wikitext.core.parser MarkupParser])
   (:import [org.eclipse.mylyn.wikitext.textile.core TextileLanguage])
@@ -218,16 +219,51 @@
 		[
 		encryption (get (get project :doc-pdf) :encryption)
 		encrypt? (not (nil? encryption))
+		sibling (get-sibling document "encrypted.pdf")
 		]
 		(if encrypt?
-		(doall
+		(do
 			(PdfEncryptor/encrypt 
 				(PdfReader. (.getAbsolutePath document)) 
-				(FileOutputStream. (get-sibling document "encrypted.pdf")) 
+				(FileOutputStream. sibling) 
 				(get encryption :strength false) 
 				(get encryption :userpassword "")
 				(get encryption :ownerpassword "")  
 				(get encryption :permissions ""))
+			 (.delete document)
+			 (.renameTo sibling document)))))
+				
+(defn signature
+	[document project]
+
+	(let [
+	sign (get (get project :doc-pdf) :sign)
+	sign? (not (nil? sign))
+	
+	key-store (KeyStore/getInstance (KeyStore/getDefaultType))
+	document-path (.getAbsolutePath document)
+	sibling (get-sibling document "signed.pdf")
+	fos (FileOutputStream. sibling)
+	stamper (PdfStamper/createSignature  (PdfReader. document-path) fos '\0' nil)
+	pdfSignatureAppearance (.getSignatureAppearance stamper)
+	]
+	(if sign?
+		(do
+		; load keystore
+		(.load key-store (FileInputStream. (sign :keystore)) (.toCharArray (sign :password)))
+		; create signature
+		(.setCrypto pdfSignatureAppearance 
+			(.getKey key-store (sign :keyalias) (.toCharArray (sign :keypwd)))
+			(.getCertificateChain key-store (sign :certificate)) 
+			nil 
+			PdfSignatureAppearance/SELF_SIGNED)
+    		(.setCertificationLevel pdfSignatureAppearance PdfSignatureAppearance/CERTIFIED_NO_CHANGES_ALLOWED)
+			(.setVisibleSignature pdfSignatureAppearance (com.lowagie.text.Rectangle. 10 10 10 10) 1 nil)
+
+			; clean up
+			(.close stamper)	
+			(.delete document)
+			(.renameTo sibling (File. document-path))
 		))))
 
 (defn add-fonts
@@ -286,12 +322,16 @@
     (map 
       #(add-document renderer (handle-doc %)) 
        input-files))
-  ; finish PDF
+
+  ; finish base PDF
   (doto renderer (.finishPDF))
   (.close os) 
 
   ; clean up intermediate files
   (clean)
+  ; sign if needed
+  (signature output-file project)
   ; encrypt if needed
   (encrypt output-file project)
-))
+
+  ))

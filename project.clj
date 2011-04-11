@@ -1,4 +1,4 @@
-(defproject lein-doc-pdf "1.0.3"
+(defproject lein-doc-pdf "1.0.4"
   :description "Lein plugin for PDF generation"
   :dependencies [
                    ; main clojure library
@@ -24,12 +24,15 @@
                     :exclusions [bctsp/bcmail-jdk14 org.apache.ant/ant org.apache.ant/ant-launcher]]]
   :repositories  {"stuartsierra" "http://stuartsierra.com/maven2" "conjars" "http://conjars.org/repo/"}
   :source-path "src/clj"
+
   :doc-pdf {
 	:input-files "src/samples/remote"
 	:output-file "seed.pdf"
 	:fonts-folder "src/fonts"
+	:sign {:keystore "src/security/keystore.sample" :password "nicolas" :keyalias "docpdf" :keypwd "nicolas" :certificate "docpdf"}
 	:encryption {:userpassword "user" :ownerpassword "owner" :strength true :permissions 0}
   }
+
   :dev-dependencies [
                      [lein-doc-pdf "1.0.3"]
 					 [lein-clojars/lein-clojars "0.6.0"]
