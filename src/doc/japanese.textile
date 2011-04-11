@@ -1,3 +1,0 @@
-h1. hello japanese template
-
-This is Japanese 日本語

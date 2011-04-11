@@ -1,6 +1,8 @@
 (ns leiningen.pdf
   "Convert text document under different markup languages to PDF"
   (:use clojure.contrib.java-utils)
+  (:require [clojure.contrib.logging :as log])
+  ; below are java libraries only
   (:import [org.ho.yaml Yaml])
   (:import [org.eclipse.mylyn.wikitext.core.parser MarkupParser])
   (:import [org.eclipse.mylyn.wikitext.textile.core TextileLanguage])
@@ -37,6 +39,14 @@
    (if (> dot-index 0)
      [(.substring filename 0 dot-index) (.substring filename (+ 1 dot-index))]
      [filename ""])))
+
+(def files-to-remove (ref ()))
+(defn delete-after-run
+	[file]
+	(dosync (alter files-to-remove conj file)))
+
+(defn clean
+	[] (doall (map #(.delete %) @files-to-remove)))
 
 (defn get-sibling
   [document ext] 
@@ -76,9 +86,9 @@
 
 (defn handle-markdown [document]
   (let[file (get-sibling document "html")
-       markdown (com.petebevin.markdown.MarkdownProcessor.)]
+       markdown (MarkdownProcessor.)]
     (spit file (.markdown markdown (get-file-content document)))
-    ;(.deleteOnExit file) 
+ 	(delete-after-run file)
     file))
 
 (defn handle-freemarker [document]
@@ -91,7 +101,7 @@
     (doto configuration
       (.setDirectoryForTemplateLoading parent-folder)
       (.setDefaultEncoding "UTF-8"))
-    (.deleteOnExit file)
+ 	(delete-after-run file)
     (.process (.getTemplate configuration (.getName document)) properties writer)
     (.close writer)
   file))
@@ -102,9 +112,27 @@
         attributes (get-properties document)
        ]
     (.setAttributes template attributes)
-    (.deleteOnExit file)
+ 	(delete-after-run file)
     (spit file (.toString template))
     file))
+
+(defn fetch-url[address]
+	(with-open [stream (.openStream (java.net.URL. address))]
+		(let  [buf (java.io.BufferedReader. 
+			(java.io.InputStreamReader. stream))]
+		(apply str (line-seq buf)))))
+		
+(defn handle-url
+	[document]
+		(let[
+		meta (load-file (.getPath document))
+		url (get meta :url)
+		file (get-sibling document "html")
+		]
+	  (println (str "[\tFetching remote document: " url))
+	  (spit file (fetch-url url))
+	  (delete-after-run file)
+	file))
 
 (defn handle-textile [document]
   (let[ 
@@ -118,7 +146,7 @@
   (if (.exists css) (.addCssStylesheet builder css))
   (.setEncoding builder "UTF-8") 
   ; make sure we do not leave intermediate files
-  (.deleteOnExit file)  
+  (delete-after-run file)
   ; convert the textile content 
   (.parse marker (get-file-content document))
   ; finish writer the html file
@@ -137,6 +165,7 @@
        "textile" (handle-textile file)
        "markdown" (handle-markdown file)
        "ftl" (handle-freemarker file)
+ 	   "url" (handle-url file)
        ()))))
 
 ; return the first process-able document
@@ -165,7 +194,7 @@
 		]
 		(condp = key
 			:output-file 
-			 	(if (nil? project-value) "classes/doc.pdf" project-value)
+			 	(if (not (empty? (first args))) (first args) (if (nil? project-value) "classes/doc.pdf" project-value))
 			:fonts-folder 
 				(File. (if (nil? project-value) "src/fonts"  project-value))
 			:input-files
@@ -197,11 +226,11 @@
 (defn pdf [project & args]
   (let
     [
-     ;first-arg (first args) ; input file
-     ;second-arg (second args) ; output file
+     first-arg (first args) ; input file
+     second-arg (second args) ; output file
      
-     input-files (get-parameter :input-files project)
-     outputfile  (get-parameter :output-file project)
+     input-files (get-parameter :input-files project first-arg)
+     outputfile  (get-parameter :output-file project second-arg)
 
      os (FileOutputStream. (File. outputfile))    
      renderer (ITextRenderer.)   
@@ -236,4 +265,8 @@
        input-files))
   ; finish PDF
   (doto renderer (.finishPDF))
-  (.close os) ))
+  (.close os) 
+
+  ; clean up intermediate files
+  (clean)
+))

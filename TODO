@@ -1,9 +1,12 @@
-* metadata: output filename, pages, folder, font folder
-* support for external URL
-* pluggable format support
+x remove processed files after the run, not on shutdown, so we can use interactive mode
+x one file on the command line
+x support for external URL
 
-* support for docbook
-* support for velocity
+
+* pluggable format support
+* support trigger on file save in the target folder
 * support for GSP
-* support to transform output from marginalia
-* Nice output for each templating system
+* support for proxy in remote files
+
+* support for docbook, velocity, enlive templating systems
+* support for openxml format of open office

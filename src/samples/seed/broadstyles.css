@@ -1,0 +1,185 @@
+
+/** Coudal Partners 2008 **/
+
+
+
+body 	{
+		margin: 0 0 0 0;
+		padding: 0 0 0 0;
+		text-align: center;	
+		background-color: #FFF;
+		border-top: 3px solid #CCC;
+		}
+		
+		
+#container	{
+			position: relative;
+			/*width: 860px;*/
+			/*height: 1600px;*/
+			margin: 84 auto 0 auto;
+			padding: 0 0 0 0;
+			background-color: #FFF;
+			}
+		
+
+p 		{
+		font-family: times, Times New Roman, times-roman, georgia, serif;
+		color: #444;
+		margin: 0 0 0 0;
+		padding: 0 0 0 0;
+		text-align: center;
+		}
+		
+		
+.woodone 		{
+				/*font-size: 65px;*/
+				font-size: 52px;
+				line-height: 60px;
+				letter-spacing: -1px;
+				padding-top: 10px;
+				}
+				
+				
+.woodtwo 		{
+				/*font-size: 52px;*/
+				font-size:42px;
+				line-height: 46px;
+				letter-spacing: -1px;
+				}
+
+
+.woodthree 		{
+				/*font-size: 49px;*/
+				font-size: 40px;
+				
+				line-height: 40px;
+				letter-spacing: -1px;
+				padding-bottom: 4px;
+				}
+				
+				
+.woodfour 		{
+				/*font-size: 48px;*/
+				font-size: 39px;
+				line-height: 40px;
+				letter-spacing: -1px;
+				}
+				
+				
+.woodfive 		{
+				/*font-size: 69px;*/
+				font-size: 554px;
+				line-height: 60px;
+				letter-spacing: -1px;
+				}
+				
+				
+.eyebrow 		{	
+				/*font-size: 19px;*/
+				font-size: 15px;
+				line-height: 29px;
+				}
+				
+
+.caps 			{
+				/*font-size: 14px;*/
+				font-size: 11px;
+				line-height: 20px;
+				text-transform: uppercase;
+				}
+				
+
+.lede 			{		
+				/*font-size: 28px;*/
+				font-size: 22px;
+				line-height: 40px;
+				letter-spacing: -1px;
+				}
+		
+
+.copyone 		{
+				font-size: 14px;
+				line-height: 20px;
+				}
+		
+
+.copytwo 		{
+				font-size: 12px;
+				line-height: 18px;
+				}	
+
+		
+.copyleft 		{
+				font-size: 12px;
+				line-height: 18px;
+				padding: 0 0 7px 0;
+				text-align: left;
+				}
+		
+		
+#sked			{
+				position: relative;
+				width: 80%;
+				height: 140px;
+				}
+		
+		
+		#skeda	{
+				position: absolute;
+				top: 10px;
+				left: 61px;
+				width: 30%;
+				}
+		
+		
+		#skedb	{
+				position: absolute;
+				top: 10px;
+				left: 280px;
+				width: 35%;
+				}
+				
+				
+		#skedc	{
+				position: absolute;
+				top: 10px;
+				left: 500px;
+				width: 30%;
+				}
+				
+		
+		
+#line 			{
+				border-bottom: 1px solid #CCC;
+				width: 748px;
+				margin: 10 0 20 56;
+				}
+				
+				
+				
+#break 			{
+				height: 30px;
+				}
+		
+		
+
+#crown			{
+				width: 820px;
+				text-align: center;
+				height: 410px;
+				padding-top: 24px;
+				}
+		
+			
+a:link			{ color: #B95E27; text-decoration: none; } 
+a:visited		{ color: #B95E27; text-decoration: none; }
+a:active		{ color: #1A69A1; text-decoration: none; } 
+a:hover			{ color: #888; text-decoration: none;}
+
+
+.grey			{ color: #888; }
+
+
+.smallcaps		{ font-size: 88%; }
+
+
