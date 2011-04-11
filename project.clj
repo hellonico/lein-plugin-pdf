@@ -1,4 +1,4 @@
-(defproject lein-doc-pdf "1.0.4"
+(defproject lein-doc-pdf "1.0.5"
   :description "Lein plugin for PDF generation"
   :dependencies [
                    ; main clojure library
@@ -34,6 +34,6 @@
   }
 
   :dev-dependencies [
-                     [lein-doc-pdf "1.0.3"]
+                     ;[lein-doc-pdf "1.0.5"]
 					 [lein-clojars/lein-clojars "0.6.0"]
                      [lein-eclipse "1.0.0"]] ) 

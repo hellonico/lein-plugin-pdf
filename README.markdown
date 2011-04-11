@@ -34,6 +34,14 @@ This provides support for [Freemarker](http://freemarker.sourceforge.net/) templ
 
 This uses [string template](http://www.stringtemplate.org/) to generate the HTML file them again with dynamic properties integrated to make the generation dynamic. See the [Dynamic Properties](#dp) 
 
+## Remote document
+
+A text filename ending in ".url" can contain a clojure map, like this:
+
+''{:url "http://www.webheadstart.org/snippets/index4ef9.html?id=12"}`` 
+
+That will point the plugin to download the document at the given URL and will include a PDF.
+
 # Dynamic Properties
 <a name="dp"/>
 
@@ -88,3 +96,28 @@ You need to force the JVM to use the file encoding to handle encoding characters
 ``export JAVA_OPTS="-Dfile.encoding=utf-8" ; lein pdf``
 
 Then the JVM will pick up the proper encoding to handle files and will display the fonts in the resulting document. 
+
+### Support for encryption
+
+The following set of metadata:
+
+``:encryption {:userpassword "user" :ownerpassword "owner" :strength true :permissions 0}``
+
+will encrypt the resulting PDF. 
+
+### Support for signature
+
+The following set of metadata:
+
+``:sign {:keystore "src/security/keystore.sample" :password "nicolas" :keyalias "docpdf" :keypwd "nicolas" :certificate "docpdf"}``
+
+will sign the document with the key and certificate contained in the given keystore.
+This is very basic at the moment.
+
+### Interactive development
+
+Start lein in interactive mode:
+
+``lein interactive``
+
+And you can now use and re-use the ``pdf`` commands without restarting the JVM.
