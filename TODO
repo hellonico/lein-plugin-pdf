@@ -1,3 +1,5 @@
+* support for one file as input
+
 * support trigger on file save in the target folder
 
 * pluggable format support

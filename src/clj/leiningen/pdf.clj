@@ -209,7 +209,7 @@
 					input-file 
 				(File. (if (not (nil? command-line-file)) command-line-file (if (nil? project-value) "src/doc" project-value)))
 				]
- 			(if (.isFile input-file) input-file (seq (.listFiles input-file))))
+ 			(if (.isFile input-file) [input-file] (seq (.listFiles input-file))))
 			""
 		)))
 

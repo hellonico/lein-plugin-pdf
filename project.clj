@@ -29,7 +29,7 @@
 	:input-files "src/samples/remote"
 	:output-file "seed.pdf"
 	:fonts-folder "src/fonts"
-	:sign {:keystore "src/security/keystore.sample" :password "nicolas" :keyalias "docpdf" :keypwd "nicolas" :certificate "docpdf"}
+	;:sign {:keystore "src/security/keystore.sample" :password "nicolas" :keyalias "docpdf" :keypwd "nicolas" :certificate "docpdf"}
 	:encryption {:userpassword "user" :ownerpassword "owner" :strength true :permissions 0}
   }
 
