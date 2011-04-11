@@ -171,10 +171,10 @@ p 		{
 				}
 		
 			
-a:link			{ color: #B95E27; text-decoration: none; } 
-a:visited		{ color: #B95E27; text-decoration: none; }
-a:active		{ color: #1A69A1; text-decoration: none; } 
-a:hover			{ color: #888; text-decoration: none;}
+a:link			{ color: #B95E27; text-decoration: none; border: 0px;} 
+a:visited		{ color: #B95E27; text-decoration: none; border: 0px;}
+a:active		{ color: #1A69A1; text-decoration: none; border: 0px;} 
+a:hover			{ color: #888; text-decoration: none; border: 0px;}
 
 
 .grey			{ color: #888; }
