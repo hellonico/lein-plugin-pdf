@@ -202,8 +202,9 @@
        "textile" (handle-textile file)
        "markdown" (handle-markdown file)
        "ftl" (handle-freemarker file)
- 	     "url" (handle-url file)
-       ""))))
+ 	   "url" (handle-url file)
+       ()
+		))))
 
 ; return the first process-able document
 ; this is needed to get the proper format for PDF creation
@@ -212,7 +213,8 @@
   (loop [files input-files]
     (let [java-file  (first files)
           intermediate-file (handle-doc java-file)
-          docl (not (seq? intermediate-file ))]
+          docl (not (seq? intermediate-file ))
+		 ]	
     (if docl
       (do
         ; ugly, we delete the file we just have processed while looking up
@@ -268,19 +270,19 @@
 ; filter method to create a signature of the PDF				
 (defn signature
 	[document project]
-
 	(let [
 	sign (get (get project :doc-pdf) :sign)
 	sign? (not (nil? sign))
-	
-	key-store (KeyStore/getInstance (KeyStore/getDefaultType))
-	document-path (.getAbsolutePath document)
-	sibling (get-sibling document "signed.pdf")
-	fos (FileOutputStream. sibling)
-	stamper (PdfStamper/createSignature  (PdfReader. document-path) fos '\0' nil)
-	pdfSignatureAppearance (.getSignatureAppearance stamper)
 	]
 	(if sign?
+    (let[
+	 key-store (KeyStore/getInstance (KeyStore/getDefaultType))
+	 document-path (.getAbsolutePath document)
+	 sibling (get-sibling document "signed.pdf")
+	 fos (FileOutputStream. sibling)
+	 stamper (PdfStamper/createSignature  (PdfReader. document-path) fos '\0' nil)
+	 pdfSignatureAppearance (.getSignatureAppearance stamper)
+	 ]
 		(do
 		; load keystore
 		(.load key-store (FileInputStream. (sign :keystore)) (.toCharArray (sign :password)))
@@ -296,7 +298,7 @@
 			; clean up
 			(.close stamper)	
 			(.delete document)
-			(.renameTo sibling (File. document-path))))))
+			(.renameTo sibling (File. document-path)))))))
 
 ; collect all the fonts from the font folder
 ; add them to the PDF
