@@ -2,23 +2,31 @@
   "Convert text document under different markup languages to PDF"
   (:use clojure.contrib.java-utils)
   (:require [clojure.contrib.logging :as log])
+
   ; below are java libraries only
-  (:import [com.lowagie.text.pdf PdfReader PdfEncryptor PdfStamper PdfSignatureAppearance])
+
+  ; standard java
   (:import [java.security PrivateKey KeyStore])
-  (:import [org.ho.yaml Yaml])
-  (:import [org.eclipse.mylyn.wikitext.core.parser MarkupParser])
-  (:import [org.eclipse.mylyn.wikitext.textile.core TextileLanguage])
+  (:import [java.net Proxy InetSocketAddress])
   (:import [java.io 
             InputStreamReader 
             FileReader
+			BufferedReader
             FileInputStream
             FileOutputStream
             File
             FileWriter])
+
+  ; external APIs
+  (:import [com.lowagie.text.pdf PdfReader PdfEncryptor PdfStamper PdfSignatureAppearance])
+  (:import [org.ho.yaml Yaml])
+  (:import [org.eclipse.mylyn.wikitext.core.parser MarkupParser])
+  (:import [org.eclipse.mylyn.wikitext.textile.core TextileLanguage])
   (:import [org.eclipse.mylyn.wikitext.core.parser.builder HtmlDocumentBuilder])
   (:import [com.petebevin.markdown MarkdownProcessor])
   (:import [org.antlr.stringtemplate StringTemplate])
   (:import [org.xhtmlrenderer.pdf ITextRenderer]))
+
 ;;;;
 ;;;; This lein plugin generates PDF based on html and textile inputs
 ;;;;
@@ -122,12 +130,35 @@
     (spit file (.toString template))
     file))
 
+(comment 
 (defn fetch-url[address]
-	(with-open [stream (.openStream (java.net.URL. address))]
+	(with-open [stream ]
 		(let  [buf (java.io.BufferedReader. 
 			(java.io.InputStreamReader. stream))]
 		(apply str (line-seq buf)))))
-		
+	)
+
+
+(defn fetch-url
+  "Return the web page as a string."
+  [address meta]
+  (let 
+     [
+     url (java.net.URL. address)     
+     a-stream 
+		(if (contains? meta :proxy-host)
+		   ; if proxy-host is defined create a proxy
+		   (.getInputStream (.openConnection url 
+			(Proxy. 
+				java.net.Proxy$Type/HTTP 
+				(InetSocketAddress. (get meta :proxy-host) (get meta :proxy-port)))))
+		   ; if no proxy-host then open the url as usual
+	   	   (.openStream (java.net.URL. address)))
+     ]
+    (with-open [stream a-stream]
+      (let [buf (BufferedReader. (InputStreamReader. stream))]
+        (apply str (line-seq buf))))))
+
 (defn handle-url
 	[document]
 		(let[
@@ -136,7 +167,7 @@
 		file (get-sibling document "html")
 		]
 	  (println (str "[\tFetching remote document: " url))
-	  (spit file (fetch-url url))
+	  (spit file (fetch-url url meta))
 	  (delete-after-run file)
 	file))
 
@@ -171,8 +202,8 @@
        "textile" (handle-textile file)
        "markdown" (handle-markdown file)
        "ftl" (handle-freemarker file)
- 	   "url" (handle-url file)
-       ()))))
+ 	     "url" (handle-url file)
+       ""))))
 
 ; return the first process-able document
 ; this is needed to get the proper format for PDF creation
@@ -191,6 +222,7 @@
         java-file)
       (recur (rest files))))))
 
+; retrieve parameters for this run
 (defn get-parameter
 	[key project & args]
 	(let
@@ -209,10 +241,10 @@
 					input-file 
 				(File. (if (not (nil? command-line-file)) command-line-file (if (nil? project-value) "src/doc" project-value)))
 				]
- 			(if (.isFile input-file) [input-file] (seq (.listFiles input-file))))
-			""
-		)))
+ 			(if (.isFile input-file) (seq [input-file]) (seq (.listFiles input-file))))
+			"")))
 
+; filter method to encrypt the PDF
 (defn encrypt
 	[document project] 
 	(let
@@ -232,7 +264,8 @@
 				(get encryption :permissions ""))
 			 (.delete document)
 			 (.renameTo sibling document)))))
-				
+
+; filter method to create a signature of the PDF				
 (defn signature
 	[document project]
 
@@ -263,9 +296,10 @@
 			; clean up
 			(.close stamper)	
 			(.delete document)
-			(.renameTo sibling (File. document-path))
-		))))
+			(.renameTo sibling (File. document-path))))))
 
+; collect all the fonts from the font folder
+; add them to the PDF
 (defn add-fonts
 	[project renderer]
 	(let
