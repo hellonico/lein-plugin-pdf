@@ -18,7 +18,7 @@
                    ; string template support
                    [org.clojars.ghoseb/stringtemplate "3.2.1"]
                    ; support for enlive templates
-                   [enlive "1.0.0-SNAPSHOT"]
+                   [enlive "1.0.0"]
                    ; pdf generation
                    [com.lowagie/itext "2.0.8"
                     :exclusions [bctsp/bcmail-jdk14 org.apache.ant/ant org.apache.ant/ant-launcher]]
