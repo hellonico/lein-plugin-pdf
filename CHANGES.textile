@@ -1,6 +1,22 @@
 h1. Lein PDF Plugin Changes
 
+h2. Version Updates
+
+* Version 1.0.8
+** Support for profiles of metadata in project.clj
+** Support for xilize template engine
+** Samples for xilize
+** Change of license to GPL v3
 * Version 1.0.7
 ** Support for styles
 ** Support for clj and enlive templates
 ** Using metadata for reuse outside lein
+
+h2. Other things
+
+* clean sample with arabic/japanese fonts
+* support trigger on file save in the target folder
+* pluggable format support
+* support for GSP
+* support for docbook, velocity templating systems
+* support for openxml (format of open office)

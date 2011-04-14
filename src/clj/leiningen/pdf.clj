@@ -20,6 +20,7 @@
             FileWriter])
             
   ; external APIs
+  (:import [com.centeredwork.xilize Xilize2 ReporterStd BeanShell])
   (:import [org.apache.commons.io FileUtils])
   (:import [com.lowagie.text.pdf PdfReader PdfEncryptor PdfStamper PdfSignatureAppearance])
   (:import [org.ho.yaml Yaml])
@@ -221,6 +222,19 @@
   ; finish writer the html file
   (.close writer)
   file))
+  
+(defn handle-xilize [document]
+    (Xilize2/startup (ReporterStd.) (BeanShell.) (java.util.HashMap.))
+    (let[
+        file (get-sibling document "html") 
+        xil (Xilize2.)
+        ]
+    (delete-after-run file)
+    (.xilizeFile xil (get-parent document)  (File. (.getAbsolutePath document)))
+    (.translate xil)
+    (Xilize2/shutdown)
+    file
+    ))
 
 (defn handle-clj
   [document]
@@ -247,7 +261,7 @@
        "ftl"        (handle-freemarker file)
        "clj"        (handle-clj file)
        "url"        (handle-url file)
-       
+       "xil"        (handle-xilize file)
        ()
 		))))
 
@@ -471,4 +485,13 @@
 
 ; main method for plugin
 (defn pdf [project & args]
-  (generate-pdf (merge (get project :doc-pdf {}) {:first (first args) :second  (second args) })))
+    (println (get
+          (project :doc-pdf) 
+          (keyword (.substring (first args) 1))))
+  (if (and args (.startsWith (first args) ":")) 
+      ; use a profile in the project metadata
+      (generate-pdf (get
+          (project :doc-pdf) 
+          (keyword (.substring (first args) 1))))
+      ; regular parameters
+      (generate-pdf (merge (get project :doc-pdf {}) {:first (first args) :second  (second args) }))))

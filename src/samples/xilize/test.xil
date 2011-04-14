@@ -1,0 +1,12 @@
+define. style
+.special { background: ivory; }
+p.special { letter-spacing:0.3em; color: purple; }
+blockquote.special { font-style: italic; }
+
+p(special). Example of styling.
+
+A normal paragraph.
+
+bq(special). Example of styling.
+
+bq. A normal block quote.

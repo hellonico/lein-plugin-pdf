@@ -1,0 +1,24 @@
+define. style
+#toc {
+  font-size: 18pt; 
+  text-align: center;
+}
+h1 {page-break-before: always;}
+#header {font-size: 24px; font-family: "Verdana"}
+
+p(#header). This is the title in the first page
+
+p(#toc){page-break-before: always;}. Table of Contents
+
+toc. 1 4 #
+
+
+h1. hello h1
+
+h2. this is a sublist
+
+h3. More to come
+
+h1. New h1
+
+h2. this is a new h2

@@ -1,5 +1,7 @@
-(defproject lein-doc-pdf "1.0.7"
+(defproject lein-doc-pdf "1.0.8"
   :description "Lein plugin for PDF generation"
+  :license {:name "GNU General Public License"
+            :url "http://www.gnu.org/licenses/gpl-3.0.txt"}
   :dependencies [
                    ; main clojure library
                    [org.clojure/clojure "1.2.1"]
@@ -19,6 +21,8 @@
                    [org.clojars.ghoseb/stringtemplate "3.2.1"]
                    ; support for enlive templates
                    [enlive "1.0.0"]
+                   ; xilize templates
+                   [xilize/xilize-engine "3.0.3"]
                    ; pdf generation
                    [com.lowagie/itext "2.0.8"
                     :exclusions [bctsp/bcmail-jdk14 org.apache.ant/ant org.apache.ant/ant-launcher]]
@@ -29,16 +33,23 @@
   :source-path "src/clj"
 
   :doc-pdf {
-	:input-files "src/samples/remote"
-   ;	:output-file "seed.pdf"
-	:fonts-folder "src/fonts"
-  ;:style "src/style/changes"
-  :style "src/style/changes.jar/changes.jar"
-	;:sign {:keystore "src/security/keystore.sample" :password "nicolas" :keyalias "docpdf" :keypwd "nicolas" :certificate "docpdf"}
-	;:encryption {:userpassword "user" :ownerpassword "owner" :strength true :permissions 0}
+    :samples-remote {
+    	:input-files "src/samples/remote"    
+    	:output-file "classes/remote.pdf"
+        :fonts-folder "src/fonts"
+    }
+    :changes {
+        :input-files "CHANGES.textile"
+        :output-file "changes.pdf"
+        :style "src/style/changes.jar/changes.jar"
+    }
+    ; :style "src/style/changes"
+    ; 
+	; :sign {:keystore "src/security/keystore.sample" :password "nicolas" :keyalias "docpdf" :keypwd "nicolas" :certificate "docpdf"}
+	; :encryption {:userpassword "user" :ownerpassword "owner" :strength true :permissions 0}
   }
 
   :dev-dependencies [
-                     ;[lein-doc-pdf "1.0.5"]
+                     [lein-doc-pdf "1.0.7"]
 					 [lein-clojars/lein-clojars "0.6.0"]
                      [lein-eclipse "1.0.0"]] ) 

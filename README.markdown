@@ -60,6 +60,10 @@ The [enlive sample](src/samples/enlive/test.clj) shows how to embed the concept 
 
 The only requirement for the script is that the return value must be the full html content of the document.
 
+## Xilize templates (*.xil)
+
+Looking at the Flying Saucer documentation in details, we realized they use another templating system, named [xilize](http://xilize.sourceforge.net/) that has some useful integration of macros in it.
+
 # Dynamic Properties
 <a name="dp"/>
 
@@ -73,7 +77,7 @@ The way it look for the properties is by taking the basename of the template and
 The plugin is on [clojars](http://clojars.org/repo/lein-doc-pdf/lein-doc-pdf/).
 To add this plugin to your lein-based clojure project, here is what to put in the *project.clj* file:
 
-``[lein-doc-pdf "1.0.0"]``
+``[lein-doc-pdf "1.0.7"]``
 
 Then running 
 
@@ -107,6 +111,26 @@ You can add the following parameters in your ``project.clj`` file:
 * output-file: the name of the file to output 
 * fonts-folder: the place to load font for the resulting PDF. Those fonts will be included in the resulting file
 * input-files: the source folder, or file to load templates from. If this points to a folder, this will include all the files in that folder.
+
+Profiles are also supported. So if you define something like this in your project.clj file:
+<pre>
+:doc-pdf {
+  :samples-remote {
+  	:input-files "src/samples/remote"    
+  	:output-file "classes/remote.pdf"
+      :fonts-folder "src/fonts"
+  }
+  :changes {
+      :input-files "CHANGES.textile"
+      :output-file "changes.pdf"
+      :style "src/style/changes.jar/changes.jar"
+  }
+</pre>
+
+Then you can use the following
+``lein pdf :changes`` 
+
+To use the settings from the :changes submap of the :doc-pdf map.
 
 ### Support for utf-8
 
