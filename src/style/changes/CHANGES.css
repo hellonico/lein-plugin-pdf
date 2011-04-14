@@ -1,0 +1,45 @@
+html {
+	font-family: "IPAexGothic";
+	font-size: 9px;
+}
+
+body {
+	height: 100%;
+}
+
+h1 {
+	font-family: "Helvetica";
+	font-size: 24px;
+	margin-left: 100px;
+	padding-right: 100px;
+	background:url(butterfly.jpg) no-repeat left;
+	text-align: right;
+	height: 64px;
+}
+
+body > ul {
+	list-style-image:url(marker.gif)	
+}
+
+li {
+	line-height: 15px;	
+}
+
+body > ul > li:first-child
+{
+	font-style:italic; 
+	color:#CCCCFF;
+}
+
+body > ul > li:first-child + li
+{
+  color: #CC99FF;
+}
+
+body > .footer {
+	font-size: 9px;
+	position:relative;
+ 	bottom:90%;
+ 	left: 80%;
+ 	width:200px;
+}

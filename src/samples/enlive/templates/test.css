@@ -1,0 +1,23 @@
+*{ 
+	font-size: 9px;
+	font-family:"IPAexGothic";
+}
+
+h1 {
+	color:white;
+	background-color:blue;
+}
+
+h2 {
+	color:white;
+	font-size: 12px;
+	background-color:#FF66cc;
+}
+
+p {
+	background-color:#FF66cc;
+}
+
+html, body {
+height: 95%;
+}

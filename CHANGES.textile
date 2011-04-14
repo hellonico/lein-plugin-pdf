@@ -1,0 +1,6 @@
+h1. Lein PDF Plugin Changes
+
+* Version 1.0.7
+** Support for styles
+** Support for clj and enlive templates
+** Using metadata for reuse outside lein

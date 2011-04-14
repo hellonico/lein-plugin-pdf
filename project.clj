@@ -1,8 +1,9 @@
-(defproject lein-doc-pdf "1.0.6"
+(defproject lein-doc-pdf "1.0.7"
   :description "Lein plugin for PDF generation"
   :dependencies [
                    ; main clojure library
                    [org.clojure/clojure "1.2.1"]
+                   [commons-io/commons-io "2.0.1"]
                    ; textile format 
                    [org.fusesource.wikitext/textile-core "1.1"
                     :exclusions [org.apache.ant/ant org.apache.ant/ant-launcher]]
@@ -16,6 +17,8 @@
                    [org.jyaml/jyaml "1.3"]
                    ; string template support
                    [org.clojars.ghoseb/stringtemplate "3.2.1"]
+                   ; support for enlive templates
+                   [enlive "1.0.0-SNAPSHOT"]
                    ; pdf generation
                    [com.lowagie/itext "2.0.8"
                     :exclusions [bctsp/bcmail-jdk14 org.apache.ant/ant org.apache.ant/ant-launcher]]
@@ -27,10 +30,12 @@
 
   :doc-pdf {
 	:input-files "src/samples/remote"
-	:output-file "seed.pdf"
+   ;	:output-file "seed.pdf"
 	:fonts-folder "src/fonts"
+  ;:style "src/style/changes"
+  :style "src/style/changes.jar/changes.jar"
 	;:sign {:keystore "src/security/keystore.sample" :password "nicolas" :keyalias "docpdf" :keypwd "nicolas" :certificate "docpdf"}
-	:encryption {:userpassword "user" :ownerpassword "owner" :strength true :permissions 0}
+	;:encryption {:userpassword "user" :ownerpassword "owner" :strength true :permissions 0}
   }
 
   :dev-dependencies [
