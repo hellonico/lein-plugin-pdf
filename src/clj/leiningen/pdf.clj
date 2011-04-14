@@ -485,9 +485,6 @@
 
 ; main method for plugin
 (defn pdf [project & args]
-    (println (get
-          (project :doc-pdf) 
-          (keyword (.substring (first args) 1))))
   (if (and args (.startsWith (first args) ":")) 
       ; use a profile in the project metadata
       (generate-pdf (get
