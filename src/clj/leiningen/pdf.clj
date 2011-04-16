@@ -116,9 +116,13 @@
 ; exists and is a document this plugin handles
 (defn add-document
   [renderer document]
-  (if (and (not (nil? document)) (not (empty? (seq document))) (.isFile document) )
-    (do (println "[\tAdding\t:"document)
-    (doto renderer
+  (if (and 
+	   (not (nil? document)) 
+	   (not (and (seq? document) (empty? document)))  
+	   (.isFile document))
+    (do 
+	 (println "[\tAdding\t:"document)
+     (doto renderer
       (.setDocument document)
       (.layout)
       (.writeNextDocument)))))
