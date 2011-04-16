@@ -1,4 +1,4 @@
-(defproject lein-doc-pdf "1.0.8"
+(defproject lein-doc-pdf "1.0.9"
   :description "Lein plugin for PDF generation"
   :license {:name "GNU General Public License"
             :url "http://www.gnu.org/licenses/gpl-3.0.txt"}
@@ -38,18 +38,25 @@
     	:output-file "classes/remote.pdf"
         :fonts-folder "src/fonts"
     }
+    :readme {
+        :input-files "README.markdown"
+        :output-file "readme.pdf"
+    }
     :changes {
         :input-files "CHANGES.textile"
         :output-file "changes.pdf"
         :style "src/style/changes.jar/changes.jar"
     }
+    :xilize {
+        :input-files "src/samples/xilize"
+        :output-file "xilize.pdf"
+    }
     ; :style "src/style/changes"
-    ; 
 	; :sign {:keystore "src/security/keystore.sample" :password "nicolas" :keyalias "docpdf" :keypwd "nicolas" :certificate "docpdf"}
 	; :encryption {:userpassword "user" :ownerpassword "owner" :strength true :permissions 0}
   }
 
   :dev-dependencies [
-                     [lein-doc-pdf "1.0.7"]
+                     ;[lein-doc-pdf "1.0.7"]
 					 [lein-clojars/lein-clojars "0.6.0"]
                      [lein-eclipse "1.0.0"]] ) 

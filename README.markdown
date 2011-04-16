@@ -21,7 +21,7 @@ Here is a reference for the [Markdown syntax](http://help.couch.it/Markdown_Synt
 
 Markdown templates generated HTML will be added all the CSS in the local folders automatically along with necessary html headers.
 
-## textile + integrate CSS (*.textile)
+## Textile + integrated CSS (*.textile)
 
 The lack of documentation for the [Wikitext](http://wiki.eclipse.org/Mylyn/Incubator/WikiText) java library was scary. Had to decompile code and see what method could be called. 
 We are using a convention here so that if a CSS file exist with the same base name as the textile template, we include it in the resulting HTML file.
@@ -40,23 +40,28 @@ This uses [string template](http://www.stringtemplate.org/) to generate the HTML
 
 A text filename ending in ".url" can contain a clojure map, like this:
 
-''{:url "http://www.webheadstart.org/snippets/index4ef9.html?id=12"}`` 
+``{:url "http://www.webheadstart.org/snippets/index4ef9.html?id=12"}`` 
 
 That will point the plugin to download the document at the given URL and will include a PDF.
 You can also use a proxy, the following way:
-''{
+
+<pre>
+{
 :url "http://www.webheadstart.org/snippets/index4ef9.html?id=12"
 :proxy-host "221.213.50.115"
 :proxy-port 8000
-}''
+}
+</pre>
 
 ## Clojure, Enlive templates (*.clj)
 
 This opens the door to what ever scripting you want to do to generate the document. 
 The [enlive sample](src/samples/enlive/test.clj) shows how to embed the concept of templates within a clojure script. 
 
-``(apply str  (microblog-template "Hello Enlive templates!" 
-               {:title "post1" :body "content of post"}))`` 
+<pre>
+(apply str  (microblog-template "Hello Enlive templates!" 
+               {:title "post1" :body "content of post"}))
+</pre>
 
 The only requirement for the script is that the return value must be the full html content of the document.
 
@@ -128,6 +133,7 @@ Profiles are also supported. So if you define something like this in your projec
 </pre>
 
 Then you can use the following
+
 ``lein pdf :changes`` 
 
 To use the settings from the :changes submap of the :doc-pdf map.
@@ -181,3 +187,11 @@ Start lein in interactive mode:
 ``lein interactive``
 
 And you can now use and re-use the ``pdf`` commands without restarting the JVM.
+
+### Automatic Recreation of PDF
+
+You can use the command 
+
+``lein pdf @<profile-name>``
+
+And the plugin will start polling in the directory which is the parent of the input-file of the profile.

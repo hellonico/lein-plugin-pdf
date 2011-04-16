@@ -2,6 +2,7 @@
   "Convert text document under different markup languages to PDF"
   ; some needed clojure imports
   (:use clojure.contrib.java-utils)
+  (:use leiningen.watch)
   (:require [clojure.contrib.io :as io])
   (:require [clojure.contrib.logging :as log])
   
@@ -115,7 +116,7 @@
 ; exists and is a document this plugin handles
 (defn add-document
   [renderer document]
-  (if (and (not (empty? document)) (.isFile document) )
+  (if (and (not (nil? document)) (not (empty? (seq document))) (.isFile document) )
     (do (println "[\tAdding\t:"document)
     (doto renderer
       (.setDocument document)
@@ -482,13 +483,22 @@
   (encrypt output-file metadata)
   
   ))
+  
+;
+(defn watch
+  [metadata]
+  (let
+    [input (File. (metadata :input-files))
+     ; the function to call when a file change has been found
+     funktion (fn[] (generate-pdf metadata))]
+    (watch-and-play input funktion)))
 
 ; main method for plugin
 (defn pdf [project & args]
-  (if (and args (.startsWith (first args) ":")) 
-      ; use a profile in the project metadata
-      (generate-pdf (get
-          (project :doc-pdf) 
-          (keyword (.substring (first args) 1))))
+  (let[first-char (first (first args))]
+       
+   (condp = first-char
+       \: (generate-pdf  (get (project :doc-pdf)  (keyword (.substring (first args) 1))))
+       \@ (watch (get (project :doc-pdf)  (keyword (.substring (first args) 1))))
       ; regular parameters
-      (generate-pdf (merge (get project :doc-pdf {}) {:first (first args) :second  (second args) }))))
+   (generate-pdf (merge (get project :doc-pdf {}) {:first (first args) :second  (second args) })))))
