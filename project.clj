@@ -1,4 +1,5 @@
 (defproject lein-doc-pdf "1.0.9"
+  :url "https://github.com/hellonico/Lein-Plugin-PDF"
   :description "Lein plugin for PDF generation"
   :license {:name "GNU General Public License"
             :url "http://www.gnu.org/licenses/gpl-3.0.txt"}
