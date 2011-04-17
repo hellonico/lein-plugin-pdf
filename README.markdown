@@ -82,7 +82,7 @@ The way it look for the properties is by taking the basename of the template and
 The plugin is on [clojars](http://clojars.org/repo/lein-doc-pdf/lein-doc-pdf/).
 To add this plugin to your lein-based clojure project, here is what to put in the *project.clj* file:
 
-``[lein-doc-pdf "1.0.7"]``
+``[lein-doc-pdf "1.0.10"]``
 
 Then running 
 
