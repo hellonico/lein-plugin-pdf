@@ -2,6 +2,9 @@ h1. Lein PDF Plugin Changes
 
 h2. Version Updates
 
+* Version 1.0.10
+** Adding tests 
+** Fix bug when using xilize templates when used in profile mode on a directory.
 * Version 1.0.9
 ** Support watching files and auto-recreation of pdf, need to use the '@' modifier in front of the profile name.
 * Version 1.0.8
