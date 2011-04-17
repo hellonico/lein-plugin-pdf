@@ -1,4 +1,4 @@
-(defproject lein-doc-pdf "1.0.9"
+(defproject lein-doc-pdf "1.0.10"
   :url "https://github.com/hellonico/Lein-Plugin-PDF"
   :description "Lein plugin for PDF generation"
   :license {:name "GNU General Public License"
@@ -34,6 +34,10 @@
   :source-path "src/clj"
 
   :doc-pdf {
+	:kitchen {
+		:input-files "src/samples/kitchen"    
+    	:output-file "classes/kitchen.pdf"
+	}
     :samples-remote {
     	:input-files "src/samples/remote"    
     	:output-file "classes/remote.pdf"
@@ -41,11 +45,11 @@
     }
     :readme {
         :input-files "README.markdown"
-        :output-file "readme.pdf"
+        :output-file "classes/readme.pdf"
     }
     :changes {
         :input-files "CHANGES.textile"
-        :output-file "changes.pdf"
+        :output-file "classes/changes.pdf"
         :style "src/style/changes.jar/changes.jar"
     }
     :xilize {
@@ -58,6 +62,7 @@
   }
 
   :dev-dependencies [
-                     ;[lein-doc-pdf "1.0.7"]
+                     ;[org.clojure/clojure-contrib "1.2.0"]
+					 ;[lein-test-out "0.1.0"] 
 					 [lein-clojars/lein-clojars "0.6.0"]
                      [lein-eclipse "1.0.0"]] ) 
